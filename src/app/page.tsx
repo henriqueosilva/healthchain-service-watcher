@@ -12,12 +12,14 @@ export default async function Home() {
 
   const services: ServiceType[] = [
     {
+      id: "ahdiuawhdiuawhd",
       name: "Api Modelo de Laudo",
       active: false,
       isOnline: false,
       status: "Exit on Error",
     },
     {
+      id: "aawnidnaiwdbawudy",
       name: "Api Orthanc Firebase",
       active: true,
       isOnline: true,
@@ -103,6 +105,7 @@ async function CrudShowcase() {
 }
 
 export type ServiceType = {
+  id: string;
   name: string;
   active: boolean;
   status: string;

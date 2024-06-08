@@ -18,6 +18,24 @@ export const createTable = sqliteTableCreator(
   (name) => `healthchain-service-watcher_${name}`,
 );
 
+export const services = createTable("services", {
+  id: text("id")
+    .primaryKey()
+    .$default(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  active: integer("active", { mode: "boolean" }).default(true),
+  isOnline: integer("isOnline", { mode: "boolean" }).notNull(),
+  status: text("status").notNull(),
+
+  createdById: text("createdById")
+    .notNull()
+    .references(() => users.id),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updatedAt", { mode: "timestamp" }),
+});
+
 export const users = createTable("user", {
   id: text("id")
     .primaryKey()
