@@ -51,6 +51,11 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    signIn: async ({ account, user }) => {
+      console.log(account);
+      console.log(user);
+      return true;
+    },
   },
   adapter: DrizzleAdapter(db, {
     usersTable: users,
