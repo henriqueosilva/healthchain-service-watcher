@@ -1,13 +1,29 @@
+import { type Session } from "next-auth";
 import Link from "next/link";
 
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import { ManageService } from "./_components/manage-service";
 
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
+  const services: ServiceType[] = [
+    {
+      name: "Api Modelo de Laudo",
+      active: false,
+      isOnline: false,
+      status: "Exit on Error",
+    },
+    {
+      name: "Api Orthanc Firebase",
+      active: true,
+      isOnline: true,
+      status: "Running",
+    },
+  ];
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
@@ -37,6 +53,11 @@ export default async function Home() {
               deploy it.
             </div>
           </Link>
+          {services.map((value, idx) => (
+            <div key={idx}>
+              <ServiceStatus service={value} session={session} />
+            </div>
+          ))}
         </div>
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl text-white">
@@ -78,5 +99,28 @@ async function CrudShowcase() {
 
       <CreatePost />
     </div>
+  );
+}
+
+export type ServiceType = {
+  name: string;
+  active: boolean;
+  status: string;
+  isOnline: boolean;
+};
+
+function ServiceStatus({
+  service,
+  session,
+}: {
+  service: ServiceType;
+  session: Session | null;
+}) {
+  return (
+    <>
+      <h2>{service.name}</h2>
+      <p>{service.status}</p>
+      {session && <ManageService service={service} session={session} />}
+    </>
   );
 }
